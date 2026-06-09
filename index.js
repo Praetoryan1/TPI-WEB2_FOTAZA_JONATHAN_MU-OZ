@@ -1,9 +1,15 @@
 require('dotenv').config();
 
 const app = require('./src/app');
+const env = require('./src/config/env');
+const { testConnection } = require('./src/config/database');
 
-const PORT = process.env.PORT || 3000;
+const startServer = async () => {
+  await testConnection();
 
-app.listen(PORT, () => {
-  console.log(`Servidor iniciado en http://localhost:${PORT}`);
-});
+  app.listen(env.app.port, () => {
+    console.log(`Servidor iniciado en http://localhost:${env.app.port}`);
+  });
+};
+
+startServer();

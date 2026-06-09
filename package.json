@@ -4,13 +4,13 @@
   "description": "- Desarrollar y poner en práctica los conocimientos adquiridos en la asignatura a partir del desarrollo de un caso de estudio.",
   "main": "index.js",
   "scripts": {
-  "start": "node ./index.js",
-  "dev": "node --watch --trace-warnings ./index.js",
-  "db:init": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
-  "db:migrate": "npx sequelize-cli db:migrate",
-  "db:seed": "npx sequelize-cli db:seed:all",
-  "db:reset": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
-  "dev:css": "tailwindcss -i ./public/css/main.css -o ./public/css/output.css --watch"
+    "start": "node ./index.js",
+    "dev": "node --watch --trace-warnings ./index.js",
+    "db:init": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:seed": "npx sequelize-cli db:seed:all",
+    "db:reset": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
+    "dev:css": "tailwindcss -i ./public/css/main.css -o ./public/css/output.css --watch"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
   "dependencies": {
     "@tailwindcss/cli": "^4.3.0",
     "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
