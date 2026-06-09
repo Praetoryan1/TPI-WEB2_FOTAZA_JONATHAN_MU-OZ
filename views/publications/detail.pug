@@ -1,0 +1,40 @@
+extends ../layouts/main.pug
+
+block content
+  article.publication-detail
+    header.publication-detail__header
+      h1= publication.title
+
+      if publication.author
+        p Publicado por #{publication.author.nickname}
+
+      if publication.description
+        p= publication.description
+
+      if publication.tags && publication.tags.length
+        div.tags
+          each tag in publication.tags
+            span.tag ##{tag.name}
+
+    section.image-gallery
+      each image in publication.images
+        figure.image-card
+          div.image-wrapper
+            img(src=image.url, alt=image.alt_text || publication.title)
+
+            if image.is_watermarked && image.watermark_text
+              span.watermark= image.watermark_text
+
+          figcaption
+            if image.license === 'copyright'
+              span.badge.badge-warning Con copyright
+            else
+              span.badge.badge-success Sin copyright
+
+            p Valoración promedio: #{image.average_rating} / 5
+            p Votos: #{image.ratings_count}
+
+            if image.comments_enabled
+              p Comentarios habilitados
+            else
+              p Comentarios cerrados

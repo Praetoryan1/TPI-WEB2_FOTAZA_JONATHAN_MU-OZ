@@ -1,0 +1,72 @@
+extends ../layouts/main.pug
+
+block content
+  section.auth-card
+    h1 Crear publicación
+
+    if errors && errors.length
+      div.alert.alert-error
+        each error in errors
+          p= error
+
+    form(action="/publications", method="POST", enctype="multipart/form-data")
+      div.form-group
+        label(for="title") Título
+        input(
+          type="text",
+          id="title",
+          name="title",
+          value=old.title || '',
+          required
+        )
+
+      div.form-group
+        label(for="description") Descripción
+        textarea(
+          id="description",
+          name="description",
+          rows="4"
+        )= old.description || ''
+
+      div.form-group
+        label(for="images") Imágenes
+        input(
+          type="file",
+          id="images",
+          name="images",
+          accept="image/jpeg,image/png,image/webp",
+          multiple,
+          required
+        )
+        small Podés subir hasta 5 imágenes JPG, PNG o WEBP.
+
+      div.form-group
+        label(for="license") Licencia
+        select(id="license", name="license", required)
+          option(value="no_copyright", selected=(old.license === 'no_copyright')) Sin copyright
+          option(value="copyright", selected=(old.license === 'copyright')) Con copyright
+
+      div.form-group
+        label(for="watermark_text") Texto de marca de agua
+        input(
+          type="text",
+          id="watermark_text",
+          name="watermark_text",
+          value=old.watermark_text || '',
+          maxlength="120",
+          placeholder="Ej: Foto de Jonathan"
+        )
+        small Solo se usará cuando la licencia sea con copyright.
+
+      div.form-group
+        label(for="tags") Etiquetas
+        input(
+          type="text",
+          id="tags",
+          name="tags",
+          value=old.tags || '',
+          placeholder="paisaje, naturaleza, ciudad"
+        )
+        small Separá las etiquetas con coma.
+
+      button.btn(type="submit") Publicar

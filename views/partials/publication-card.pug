@@ -1,0 +1,19 @@
+article.publication-card
+  if publication.images && publication.images.length
+    a(href=`/publications/${publication.id}`)
+      img.publication-card__image(src=publication.images[0].url, alt=publication.title)
+
+  div.publication-card__body
+    h2
+      a(href=`/publications/${publication.id}`)= publication.title
+
+    if publication.author
+      p.publication-card__author Por #{publication.author.nickname}
+
+    if publication.description
+      p= publication.description
+
+    if publication.tags && publication.tags.length
+      div.tags
+        each tag in publication.tags
+          span.tag ##{tag.name}

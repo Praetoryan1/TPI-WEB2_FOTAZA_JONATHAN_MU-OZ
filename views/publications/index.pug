@@ -1,0 +1,19 @@
+extends ../layouts/main.pug
+
+block content
+  section.page-header
+    div
+      h1 Publicaciones
+      p Explorá imágenes compartidas por la comunidad.
+
+    if isAuthenticated
+      a.btn(href="/publications/create") Crear publicación
+
+  if publications && publications.length
+    section.publication-grid
+      each publication in publications
+        include ../partials/publication-card.pug
+  else
+    section.empty-state
+      h2 Todavía no hay publicaciones
+      p Sé el primero en compartir una fotografía.

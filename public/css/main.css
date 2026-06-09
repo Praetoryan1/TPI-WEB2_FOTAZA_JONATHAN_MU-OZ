@@ -116,3 +116,145 @@ body {
   color: #666;
   padding: 24px;
 }
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.publication-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.publication-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.publication-card__image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.publication-card__body {
+  padding: 16px;
+}
+
+.publication-card__body h2 {
+  margin-top: 0;
+}
+
+.publication-card__body a {
+  color: #111827;
+  text-decoration: none;
+}
+
+.publication-card__author {
+  color: #666;
+  font-size: 14px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tag {
+  background: #e0ecff;
+  color: #1d4ed8;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+.empty-state {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+}
+
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccd;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+.publication-detail {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.publication-detail__header {
+  margin-bottom: 24px;
+}
+
+.image-gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+.image-card {
+  margin: 0;
+}
+
+.image-wrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111827;
+}
+
+.image-wrapper img {
+  width: 100%;
+  max-height: 680px;
+  object-fit: contain;
+  display: block;
+}
+
+.watermark {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+  opacity: 0.65;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+.badge-success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge-warning {
+  background: #fef3c7;
+  color: #92400e;
+}
