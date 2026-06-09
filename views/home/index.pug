@@ -1,0 +1,14 @@
+extends ../layouts/main.pug
+
+block content
+  section.hero
+    h1 Bienvenido a Fotaza
+
+    if isAuthenticated
+      p Hola, #{currentUser.nickname}. Ya podés compartir, comentar y valorar fotografías.
+      a.btn(href="/publications/create") Crear publicación
+    else
+      p Descubrí fotografías públicas o registrate para participar en la comunidad.
+      div.actions
+        a.btn(href="/auth/register") Crear cuenta
+        a.btn.btn-secondary(href="/auth/login") Iniciar sesión

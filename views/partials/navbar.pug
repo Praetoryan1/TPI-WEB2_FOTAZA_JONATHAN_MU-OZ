@@ -1,0 +1,21 @@
+nav.navbar
+  div.navbar__brand
+    a(href="/") Fotaza
+
+  div.navbar__links
+    a(href="/") Inicio
+    a(href="/publications") Publicaciones
+    a(href="/search") Buscar
+
+    if isAuthenticated
+      a(href="/users/me") Mi perfil
+      a(href="/notifications") Notificaciones
+
+      if currentUser.role && (currentUser.role.name === 'admin' || currentUser.role.name === 'validator')
+        a(href="/moderation") Moderación
+
+      form(action="/auth/logout", method="POST")
+        button(type="submit") Salir
+    else
+      a(href="/auth/login") Ingresar
+      a(href="/auth/register") Registrarme
