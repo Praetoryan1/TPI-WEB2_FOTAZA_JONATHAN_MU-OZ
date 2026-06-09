@@ -4,11 +4,13 @@
   "description": "- Desarrollar y poner en práctica los conocimientos adquiridos en la asignatura a partir del desarrollo de un caso de estudio.",
   "main": "index.js",
   "scripts": {
-    "start": "node ./index.js",
-    "db:init": "npx sequelize-cli db:migrate",
-    "dev": "node  --watch --trace-warnings ./index.js",
-    "dev:css": "tailwindcss -i ./public/css/main.css -o ./public/css/output.css --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "start": "node ./index.js",
+  "dev": "node --watch --trace-warnings ./index.js",
+  "db:init": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
+  "db:migrate": "npx sequelize-cli db:migrate",
+  "db:seed": "npx sequelize-cli db:seed:all",
+  "db:reset": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
+  "dev:css": "tailwindcss -i ./public/css/main.css -o ./public/css/output.css --watch"
   },
   "repository": {
     "type": "git",

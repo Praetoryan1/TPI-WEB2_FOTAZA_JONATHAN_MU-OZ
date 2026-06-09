@@ -1,21 +1,9 @@
-const express = require('express');
-const pug = require('pug');
+require('dotenv').config();
 
-const PORT = 3000;
+const app = require('./src/app');
 
-const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.set('view engine', 'pug');
-app.set('views', './views');
-
-app.get('/', (req, res) => {
-    res.render('index');
-})
-
-app.get('/user', (req, res) => {
-res.render('users/index')
-})
-
-app.listen(PORT, ()=>{
-    console.log('Servidor iniciado en el puerto: ' + PORT);
-})
+app.listen(PORT, () => {
+  console.log(`Servidor iniciado en http://localhost:${PORT}`);
+});
