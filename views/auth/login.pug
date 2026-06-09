@@ -1,0 +1,36 @@
+extends ../layouts/main.pug
+
+block content
+  section.auth-card
+    h1 Iniciar sesión
+
+    if errors && errors.length
+      div.alert.alert-error
+        each error in errors
+          p= error
+
+    form(action="/auth/login", method="POST")
+      div.form-group
+        label(for="email") Email
+        input(
+          type="email",
+          id="email",
+          name="email",
+          value=old.email || '',
+          required
+        )
+
+      div.form-group
+        label(for="password") Contraseña
+        input(
+          type="password",
+          id="password",
+          name="password",
+          required
+        )
+
+      button.btn(type="submit") Ingresar
+
+    p
+      | ¿No tenés cuenta?
+      a(href="/auth/register")  Crear cuenta
