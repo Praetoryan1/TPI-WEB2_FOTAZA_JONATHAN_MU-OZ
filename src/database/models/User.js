@@ -7,6 +7,10 @@ module.exports = (sequelize) => {
         foreignKey: 'role_id',
         as: 'role'
       });
+       User.hasMany(models.Publication, {
+    foreignKey: 'user_id',
+    as: 'publications'
+  });
     }
   }
 
