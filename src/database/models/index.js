@@ -6,6 +6,7 @@ const Publication = require('./Publication')(sequelize);
 const Image = require('./Image')(sequelize);
 const Tag = require('./Tag')(sequelize);
 const PublicationTag = require('./PublicationTag')(sequelize);
+const Comment = require('./Comment')(sequelize);
 
 const models = {
   sequelize,
@@ -14,7 +15,8 @@ const models = {
   Publication,
   Image,
   Tag,
-  PublicationTag
+  PublicationTag,
+  Comment
 };
 
 Object.values(models).forEach((model) => {
