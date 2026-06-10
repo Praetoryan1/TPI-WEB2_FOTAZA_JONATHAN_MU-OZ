@@ -410,3 +410,39 @@ select {
   font-size: 12px;
   margin-left: 6px;
 }
+
+.save-publication-box,
+.collection-create-box {
+  margin-top: 24px;
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.collections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 22px;
+  margin-top: 24px;
+}
+
+.collection-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.collection-card h2 {
+  margin-top: 0;
+}
+
+.collection-card a {
+  text-decoration: none;
+}
+
+.save-publication-box form {
+  max-width: 420px;
+}

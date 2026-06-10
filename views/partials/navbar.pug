@@ -10,6 +10,7 @@ nav.navbar
     if isAuthenticated
       a(href="/users/me") Mi perfil
       a(href="/users/following-feed") Usuarios que sigo
+      a(href="/collections") Mis colecciones
       a(href="/notifications")
         | Notificaciones
         if unreadNotificationsCount && unreadNotificationsCount > 0
