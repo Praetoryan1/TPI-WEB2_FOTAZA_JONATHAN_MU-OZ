@@ -9,6 +9,7 @@ const commentsRoutes = require('./modules/comments/comments.routes');
 const ratingsRoutes = require('./modules/ratings/ratings.routes');
 const usersRoutes = require('./modules/users/users.routes');
 const followersRoutes = require('./modules/followers/followers.routes');
+const notificationsRoutes = require('./modules/notifications/notifications.routes');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/comments', commentsRoutes);
 app.use('/ratings', ratingsRoutes);
 app.use('/users', usersRoutes);
 app.use('/followers', followersRoutes);
+app.use('/notifications', notificationsRoutes);
 
 app.get('/', (req, res) => {
   res.render('home/index', {
