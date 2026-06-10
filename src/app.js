@@ -6,6 +6,7 @@ const { attachUser } = require('./middlewares/auth.middleware');
 const authRoutes = require('./modules/auth/auth.routes');
 const publicationRoutes = require('./modules/publications/publications.routes');
 const commentsRoutes = require('./modules/comments/comments.routes');
+const ratingsRoutes = require('./modules/ratings/ratings.routes');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(attachUser);
 app.use('/auth', authRoutes);
 app.use('/publications', publicationRoutes);
 app.use('/comments', commentsRoutes);
+app.use('/ratings', ratingsRoutes);
 
 app.get('/', (req, res) => {
   res.render('home/index', {

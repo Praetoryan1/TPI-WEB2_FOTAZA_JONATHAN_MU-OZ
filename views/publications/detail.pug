@@ -34,6 +34,30 @@ block content
             p Valoración promedio: #{image.average_rating} / 5
             p Votos: #{image.ratings_count}
 
+            if isAuthenticated
+              if isAuthor
+                p.rating-info No podés valorar tus propias imágenes.
+              else
+                if image.ratings && image.ratings.length
+                  p.rating-info Tu valoración: #{image.ratings[0].value} / 5
+                else
+                  form.rating-form(action=`/ratings/images/${image.id}`, method="POST")
+                    input(type="hidden", name="publication_id", value=publication.id)
+                    label(for=`rating-${image.id}`) Valorar imagen
+                    select(id=`rating-${image.id}`, name="value", required)
+                      option(value="") Seleccionar
+                      option(value="1") 1 - Muy mala
+                      option(value="2") 2 - Mala
+                      option(value="3") 3 - Regular
+                      option(value="4") 4 - Buena
+                      option(value="5") 5 - Excelente
+                    button.btn(type="submit") Valorar
+            else
+              p.rating-info
+                | Para valorar necesitás 
+                a(href="/auth/login") iniciar sesión
+                | .
+
             if image.comments_enabled
               p Comentarios habilitados
             else

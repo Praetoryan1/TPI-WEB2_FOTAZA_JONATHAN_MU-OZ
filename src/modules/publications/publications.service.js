@@ -6,7 +6,8 @@ const {
   Tag,
   PublicationTag,
   User,
-  Comment
+  Comment,
+  Rating
 } = require('../../database/models');
 
 const normalizeTags = (tagsText) => {
@@ -126,6 +127,35 @@ const getPublications = async (currentUser = null) => {
 };
 
 const getPublicationById = async (id, currentUser = null) => {
+  const imageIncludes = [
+    {
+      model: Comment,
+      as: 'comments',
+      where: {
+        is_deleted: false
+      },
+      required: false,
+      include: [
+        {
+          model: User,
+          as: 'author',
+          attributes: ['id', 'nickname', 'profile_image_url']
+        }
+      ]
+    }
+  ];
+
+  if (currentUser) {
+    imageIncludes.push({
+      model: Rating,
+      as: 'ratings',
+      where: {
+        user_id: currentUser.id
+      },
+      required: false
+    });
+  }
+
   const publication = await Publication.findOne({
     where: {
       id,
@@ -139,26 +169,10 @@ const getPublicationById = async (id, currentUser = null) => {
         as: 'author',
         attributes: ['id', 'nickname', 'profile_image_url']
       },
-    {
+      {
         model: Image,
         as: 'images',
-        include: [
-          {
-            model: Comment,
-            as: 'comments',
-            where: {
-              is_deleted: false
-            },
-            required: false,
-            include: [
-              {
-                model: User,
-                as: 'author',
-                attributes: ['id', 'nickname', 'profile_image_url']
-              }
-            ]
-          }
-        ]
+        include: imageIncludes
       },
       {
         model: Tag,
@@ -178,7 +192,6 @@ const getPublicationById = async (id, currentUser = null) => {
       ]
     ]
   });
-
 
   if (!publication) {
     return null;

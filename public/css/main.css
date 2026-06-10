@@ -295,3 +295,26 @@ select {
   margin-top: 12px;
   margin-bottom: 12px;
 }
+
+.rating-form {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rating-form label {
+  font-weight: bold;
+}
+
+.rating-form select {
+  width: auto;
+  min-width: 180px;
+}
+
+.rating-info {
+  color: #4b5563;
+  font-size: 14px;
+}
