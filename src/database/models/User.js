@@ -42,6 +42,11 @@ User.hasMany(models.Notification, {
   foreignKey: 'actor_id',
   as: 'triggeredNotifications'
 });
+
+User.hasMany(models.Collection, {
+  foreignKey: 'user_id',
+  as: 'collections'
+});
     }
   }
 

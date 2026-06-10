@@ -19,6 +19,13 @@ module.exports = (sequelize) => {
         otherKey: 'tag_id',
         as: 'tags'
       });
+
+      Publication.belongsToMany(models.Collection, {
+  through: models.CollectionPublication,
+  foreignKey: 'publication_id',
+  otherKey: 'collection_id',
+  as: 'collections'
+});
     }
   }
 

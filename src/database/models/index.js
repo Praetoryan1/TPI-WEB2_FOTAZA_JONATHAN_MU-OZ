@@ -10,6 +10,8 @@ const Comment = require('./Comment')(sequelize);
 const Rating = require('./Rating')(sequelize);
 const Follower = require('./Follower')(sequelize);
 const Notification = require('./Notification')(sequelize);
+const Collection = require('./Collection')(sequelize);
+const CollectionPublication = require('./CollectionPublication')(sequelize);
 
 const models = {
   sequelize,
@@ -22,7 +24,9 @@ const models = {
   Comment,
   Rating,
   Follower,
-  Notification
+  Notification,
+  Collection,
+  CollectionPublication
 };
 
 Object.values(models).forEach((model) => {
