@@ -32,6 +32,16 @@ User.belongsToMany(models.User, {
   otherKey: 'follower_id',
   as: 'followers'
 });
+
+User.hasMany(models.Notification, {
+  foreignKey: 'user_id',
+  as: 'notifications'
+});
+
+User.hasMany(models.Notification, {
+  foreignKey: 'actor_id',
+  as: 'triggeredNotifications'
+});
     }
   }
 
