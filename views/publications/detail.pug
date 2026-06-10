@@ -38,3 +38,43 @@ block content
               p Comentarios habilitados
             else
               p Comentarios cerrados
+
+            if isAuthor
+              form.toggle-comments-form(action=`/comments/images/${image.id}/toggle`, method="POST")
+                button.btn.btn-secondary(type="submit")
+                  if image.comments_enabled
+                    | Cerrar comentarios
+                  else
+                    | Reabrir comentarios
+
+          section.comments-box
+            h3 Comentarios
+
+            if image.comments && image.comments.length
+              each comment in image.comments
+                article.comment
+                  strong= comment.author ? comment.author.nickname : 'Usuario'
+                  p= comment.content
+                  small= new Date(comment.createdAt).toLocaleString('es-AR')
+            else
+              p Todavía no hay comentarios en esta imagen.
+
+            if isAuthenticated
+              if image.comments_enabled
+                form.comment-form(action=`/comments/images/${image.id}`, method="POST")
+                  input(type="hidden", name="publication_id", value=publication.id)
+                  textarea(
+                    name="content",
+                    rows="3",
+                    maxlength="500",
+                    placeholder="Escribí un comentario...",
+                    required
+                  )
+                  button.btn(type="submit") Comentar
+              else
+                p Los comentarios fueron cerrados por el autor.
+            else
+              p
+                | Para comentar necesitás 
+                a(href="/auth/login") iniciar sesión
+                | .

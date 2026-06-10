@@ -258,3 +258,40 @@ select {
   background: #fef3c7;
   color: #92400e;
 }
+
+.comments-box {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.comment {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.comment p {
+  margin: 8px 0;
+}
+
+.comment small {
+  color: #6b7280;
+}
+
+.comment-form {
+  margin-top: 16px;
+}
+
+.comment-form textarea {
+  resize: vertical;
+  margin-bottom: 12px;
+}
+
+.toggle-comments-form {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}

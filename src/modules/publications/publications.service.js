@@ -5,7 +5,8 @@ const {
   Image,
   Tag,
   PublicationTag,
-  User
+  User,
+  Comment
 } = require('../../database/models');
 
 const normalizeTags = (tagsText) => {
@@ -138,9 +139,26 @@ const getPublicationById = async (id, currentUser = null) => {
         as: 'author',
         attributes: ['id', 'nickname', 'profile_image_url']
       },
-      {
+    {
         model: Image,
-        as: 'images'
+        as: 'images',
+        include: [
+          {
+            model: Comment,
+            as: 'comments',
+            where: {
+              is_deleted: false
+            },
+            required: false,
+            include: [
+              {
+                model: User,
+                as: 'author',
+                attributes: ['id', 'nickname', 'profile_image_url']
+              }
+            ]
+          }
+        ]
       },
       {
         model: Tag,
@@ -150,8 +168,17 @@ const getPublicationById = async (id, currentUser = null) => {
         }
       }
     ],
-    order: [[{ model: Image, as: 'images' }, 'order_number', 'ASC']]
+    order: [
+      [{ model: Image, as: 'images' }, 'order_number', 'ASC'],
+      [
+        { model: Image, as: 'images' },
+        { model: Comment, as: 'comments' },
+        'created_at',
+        'ASC'
+      ]
+    ]
   });
+
 
   if (!publication) {
     return null;

@@ -65,9 +65,15 @@ const detail = async (req, res) => {
     });
   }
 
+const isAuthor =
+    req.user &&
+    publication.author &&
+    Number(req.user.id) === Number(publication.author.id);
+
   return res.render('publications/detail', {
     title: publication.title,
-    publication
+    publication,
+    isAuthor
   });
 };
 
