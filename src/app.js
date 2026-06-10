@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const { attachUser } = require('./middlewares/auth.middleware');
 const authRoutes = require('./modules/auth/auth.routes');
 const publicationRoutes = require('./modules/publications/publications.routes');
+const commentsRoutes = require('./modules/comments/comments.routes');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(attachUser);
 app.use('/auth', authRoutes);
 app.use('/publications', publicationRoutes);
+app.use('/comments', commentsRoutes);
 
 app.get('/', (req, res) => {
   res.render('home/index', {
