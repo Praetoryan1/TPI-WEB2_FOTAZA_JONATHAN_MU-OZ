@@ -11,6 +11,7 @@ const usersRoutes = require('./modules/users/users.routes');
 const followersRoutes = require('./modules/followers/followers.routes');
 const notificationsRoutes = require('./modules/notifications/notifications.routes');
 const collectionsRoutes = require('./modules/collections/collections.routes');
+const searchRoutes = require('./modules/search/search.routes');
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use('/users', usersRoutes);
 app.use('/followers', followersRoutes);
 app.use('/notifications', notificationsRoutes);
 app.use('/collections', collectionsRoutes);
+app.use('/search', searchRoutes);
 
 app.get('/', (req, res) => {
   res.render('home/index', {
