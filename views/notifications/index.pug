@@ -1,0 +1,42 @@
+extends ../layouts/main.pug
+
+block content
+  section.page-header
+    div
+      h1 Notificaciones
+      p Revisá las interacciones recientes con tu contenido.
+
+    if notifications && notifications.length
+      form(action="/notifications/read-all", method="POST")
+        button.btn.btn-secondary(type="submit") Marcar todas como leídas
+
+  if notifications && notifications.length
+    section.notifications-list
+      each notification in notifications
+        article.notification-card(class=notification.is_read ? 'notification-card--read' : 'notification-card--unread')
+          div
+            if notification.actor
+              strong= notification.actor.nickname
+            else
+              strong Sistema
+
+            p= notification.message
+
+            small
+              | Tipo: #{notification.type} · 
+              | Fecha: #{new Date(notification.createdAt).toLocaleString('es-AR')}
+
+          div.notification-actions
+            if notification.entity_type === 'publication' && notification.entity_id
+              a.btn.btn-secondary(href=`/publications/${notification.entity_id}`) Ver
+
+            if notification.entity_type === 'user' && notification.entity_id
+              a.btn.btn-secondary(href=`/users/${notification.entity_id}`) Ver perfil
+
+            if !notification.is_read
+              form(action=`/notifications/${notification.id}/read`, method="POST")
+                button.btn(type="submit") Marcar como leída
+  else
+    section.empty-state
+      h2 Sin notificaciones
+      p Todavía no tenés interacciones nuevas.

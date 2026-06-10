@@ -10,7 +10,10 @@ nav.navbar
     if isAuthenticated
       a(href="/users/me") Mi perfil
       a(href="/users/following-feed") Usuarios que sigo
-      a(href="/notifications") Notificaciones
+      a(href="/notifications")
+        | Notificaciones
+        if unreadNotificationsCount && unreadNotificationsCount > 0
+            span.notification-count= unreadNotificationsCount
       
       if currentUser.role && (currentUser.role.name === 'admin' || currentUser.role.name === 'validator')
         a(href="/moderation") Moderación

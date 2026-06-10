@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { User, Role } = require('../database/models');
 const env = require('../config/env');
+const { Notification } = require('../database/models');
 
 const COOKIE_NAME = 'fotaza_token';
 
@@ -10,6 +11,7 @@ const attachUser = async (req, res, next) => {
 
     res.locals.currentUser = null;
     res.locals.isAuthenticated = false;
+    res.locals.unreadNotificationsCount = 0;
 
     if (!token) {
       return next();
@@ -34,6 +36,15 @@ const attachUser = async (req, res, next) => {
     req.user = user;
     res.locals.currentUser = user;
     res.locals.isAuthenticated = true;
+
+    const unreadNotificationsCount = await Notification.count({
+  where: {
+    user_id: user.id,
+    is_read: false
+  }
+});
+
+res.locals.unreadNotificationsCount = unreadNotificationsCount;
 
     return next();
   } catch (error) {
