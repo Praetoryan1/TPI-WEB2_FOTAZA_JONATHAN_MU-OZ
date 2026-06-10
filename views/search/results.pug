@@ -1,0 +1,98 @@
+extends ../layouts/main.pug
+
+block content
+  section.page-header
+    div
+      h1 Buscar publicaciones
+      p Usá filtros combinados para encontrar fotografías dentro de la plataforma.
+
+  section.search-box
+    form(action="/search", method="GET")
+      div.search-grid
+        div.form-group
+          label(for="q") Texto
+          input(
+            type="text",
+            id="q",
+            name="q",
+            value=filters.q || '',
+            placeholder="Título o descripción"
+          )
+
+        div.form-group
+          label(for="author") Autor
+          input(
+            type="text",
+            id="author",
+            name="author",
+            value=filters.author || '',
+            placeholder="Nombre de usuario"
+          )
+
+        div.form-group
+          label(for="tag") Etiqueta
+          input(
+            type="text",
+            id="tag",
+            name="tag",
+            value=filters.tag || '',
+            placeholder="paisaje, retrato, ciudad"
+          )
+
+        div.form-group
+          label(for="license") Licencia
+          select(id="license", name="license")
+            option(value="", selected=(filters.license === '')) Todas disponibles
+            option(value="no_copyright", selected=(filters.license === 'no_copyright')) Sin copyright
+            if isAuthenticated
+              option(value="copyright", selected=(filters.license === 'copyright')) Con copyright
+
+        div.form-group
+          label(for="minRating") Rating mínimo
+          select(id="minRating", name="minRating")
+            option(value="", selected=(!filters.minRating)) Cualquiera
+            option(value="1", selected=(filters.minRating === 1)) 1 o más
+            option(value="2", selected=(filters.minRating === 2)) 2 o más
+            option(value="3", selected=(filters.minRating === 3)) 3 o más
+            option(value="4", selected=(filters.minRating === 4)) 4 o más
+            option(value="5", selected=(filters.minRating === 5)) 5
+
+        div.form-group
+          label(for="dateFrom") Desde
+          input(
+            type="date",
+            id="dateFrom",
+            name="dateFrom",
+            value=filters.dateFrom || ''
+          )
+
+        div.form-group
+          label(for="dateTo") Hasta
+          input(
+            type="date",
+            id="dateTo",
+            name="dateTo",
+            value=filters.dateTo || ''
+          )
+
+      div.search-actions
+        button.btn(type="submit") Buscar
+        a.btn.btn-secondary(href="/search") Limpiar filtros
+
+  if !isAuthenticated
+    section.info-box
+      p Como usuario anónimo solo podés ver imágenes sin copyright.
+
+  section.page-header
+    div
+      h2 Resultados
+      p #{publications.length} publicaciones encontradas.
+
+  if publications && publications.length
+    section.publication-grid
+      each publication in publications
+        include ../partials/publication-card.pug
+  else
+    section.empty-state
+      h2 No se encontraron resultados
+      p Probá modificando los filtros de búsqueda.
