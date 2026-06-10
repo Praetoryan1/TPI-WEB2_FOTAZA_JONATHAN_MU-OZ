@@ -10,6 +10,7 @@ const ratingsRoutes = require('./modules/ratings/ratings.routes');
 const usersRoutes = require('./modules/users/users.routes');
 const followersRoutes = require('./modules/followers/followers.routes');
 const notificationsRoutes = require('./modules/notifications/notifications.routes');
+const collectionsRoutes = require('./modules/collections/collections.routes');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use('/ratings', ratingsRoutes);
 app.use('/users', usersRoutes);
 app.use('/followers', followersRoutes);
 app.use('/notifications', notificationsRoutes);
+app.use('/collections', collectionsRoutes);
 
 app.get('/', (req, res) => {
   res.render('home/index', {

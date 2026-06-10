@@ -1,4 +1,6 @@
 const { validateCreatePublication } = require('./publications.validator');
+const { getUserCollections } = require('../collections/collections.service');
+
 const {
   createPublication,
   getPublications,
@@ -70,10 +72,17 @@ const isAuthor =
     publication.author &&
     Number(req.user.id) === Number(publication.author.id);
 
-  return res.render('publications/detail', {
+  let userCollections = [];
+
+if (req.user) {
+  userCollections = await getUserCollections(req.user.id);
+}
+  
+    return res.render('publications/detail', {
     title: publication.title,
     publication,
-    isAuthor
+    isAuthor,
+    userCollections
   });
 };
 
