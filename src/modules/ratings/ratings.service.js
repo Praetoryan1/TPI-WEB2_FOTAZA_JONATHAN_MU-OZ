@@ -5,6 +5,8 @@ const {
   Publication
 } = require('../../database/models');
 
+const { createNotification } = require('../notifications/notifications.service');
+
 const getImageWithPublication = async (imageId) => {
   return Image.findByPk(imageId, {
     include: [
@@ -86,6 +88,15 @@ const rateImage = async ({ imageId, userId, value }) => {
     );
 
     await recalculateImageRating(image.id, transaction);
+
+    await createNotification({
+  userId: image.publication.user_id,
+  actorId: userId,
+  type: 'rating',
+  entityType: 'publication',
+  entityId: image.publication_id,
+  message: `Valoraron una imagen de tu publicación "${image.publication.title}".`
+});
 
     return {
       publicationId: image.publication_id
