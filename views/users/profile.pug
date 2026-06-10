@@ -1,0 +1,43 @@
+extends ../layouts/main.pug
+
+block content
+  section.profile-header
+    div.profile-main
+      if profileData.user.profile_image_url
+        img.profile-avatar(src=profileData.user.profile_image_url, alt=profileData.user.nickname)
+      else
+        div.profile-avatar.profile-avatar--placeholder= profileData.user.nickname.charAt(0).toUpperCase()
+
+      div
+        h1= profileData.user.nickname
+
+        if profileData.user.biography
+          p= profileData.user.biography
+        else
+          p Este usuario todavía no agregó una biografía.
+
+        div.profile-stats
+          span #{profileData.followersCount} seguidores
+          span #{profileData.followingCount} seguidos
+          span #{profileData.user.publications.length} publicaciones
+
+    if isAuthenticated && !profileData.isOwnProfile
+      form(action=`/followers/${profileData.user.id}/toggle`, method="POST")
+        if profileData.isFollowing
+          button.btn.btn-secondary(type="submit") Dejar de seguir
+        else
+          button.btn(type="submit") Seguir
+
+  section.page-header
+    div
+      h2 Publicaciones de #{profileData.user.nickname}
+      p Fotografías compartidas por este usuario.
+
+  if profileData.user.publications && profileData.user.publications.length
+    section.publication-grid
+      each publication in profileData.user.publications
+        include ../partials/publication-card.pug
+  else
+    section.empty-state
+      h2 Sin publicaciones
+      p Este usuario todavía no compartió fotografías.

@@ -1,0 +1,17 @@
+extends ../layouts/main.pug
+
+block content
+  section.page-header
+    div
+      h1 Publicaciones de usuarios que sigo
+      p Acá aparecen las publicaciones recientes de las personas que seguís.
+
+  if publications && publications.length
+    section.publication-grid
+      each publication in publications
+        include ../partials/publication-card.pug
+  else
+    section.empty-state
+      h2 Todavía no hay publicaciones para mostrar
+      p Seguí a otros usuarios para ver su contenido en esta sección.
+      a.btn(href="/publications") Explorar publicaciones

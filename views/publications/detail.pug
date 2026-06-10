@@ -6,7 +6,9 @@ block content
       h1= publication.title
 
       if publication.author
-        p Publicado por #{publication.author.nickname}
+        p
+        | Publicado por 
+        a(href=`/users/${publication.author.id}`)= publication.author.nickname
 
       if publication.description
         p= publication.description

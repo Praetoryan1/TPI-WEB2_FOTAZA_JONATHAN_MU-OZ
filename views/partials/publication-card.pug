@@ -8,7 +8,9 @@ article.publication-card
       a(href=`/publications/${publication.id}`)= publication.title
 
     if publication.author
-      p.publication-card__author Por #{publication.author.nickname}
+      p.publication-card__author
+        | Por 
+        a(href=`/users/${publication.author.id}`)= publication.author.nickname
 
     if publication.description
       p= publication.description

@@ -9,8 +9,9 @@ nav.navbar
 
     if isAuthenticated
       a(href="/users/me") Mi perfil
+      a(href="/users/following-feed") Usuarios que sigo
       a(href="/notifications") Notificaciones
-
+      
       if currentUser.role && (currentUser.role.name === 'admin' || currentUser.role.name === 'validator')
         a(href="/moderation") Moderación
 
