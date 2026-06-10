@@ -1,0 +1,58 @@
+extends ../layouts/main.pug
+
+block content
+  section.page-header
+    div
+      h1 Mis colecciones
+      p Organizá publicaciones favoritas en colecciones privadas.
+
+  section.collection-create-box
+    h2 Crear nueva colección
+
+    if errors && errors.length
+      div.alert.alert-error
+        each error in errors
+          p= error
+
+    form(action="/collections", method="POST")
+      div.form-group
+        label(for="title") Nombre
+        input(
+          type="text",
+          id="title",
+          name="title",
+          value=old.title || '',
+          placeholder="Ej: Paisajes, Inspiración, Ideas",
+          required
+        )
+
+      div.form-group
+        label(for="description") Descripción
+        textarea(
+          id="description",
+          name="description",
+          rows="3",
+          placeholder="Descripción opcional"
+        )= old.description || ''
+
+      button.btn(type="submit") Crear colección
+
+  if collections && collections.length
+    section.collections-grid
+      each collection in collections
+        article.collection-card
+          h2
+            a(href=`/collections/${collection.id}`)= collection.title
+
+          if collection.description
+            p= collection.description
+          else
+            p Sin descripción.
+
+          p #{collection.publications ? collection.publications.length : 0} publicaciones guardadas
+
+          a.btn.btn-secondary(href=`/collections/${collection.id}`) Ver colección
+  else
+    section.empty-state
+      h2 Todavía no tenés colecciones
+      p Creá tu primera colección para guardar publicaciones favoritas.

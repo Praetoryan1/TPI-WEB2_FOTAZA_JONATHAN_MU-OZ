@@ -1,0 +1,46 @@
+extends ../layouts/main.pug
+
+block content
+  section.page-header
+    div
+      h1= collection.title
+
+      if collection.description
+        p= collection.description
+      else
+        p Colección personal de publicaciones favoritas.
+
+    a.btn.btn-secondary(href="/collections") Volver a mis colecciones
+
+  if collection.publications && collection.publications.length
+    section.publication-grid
+      each publication in collection.publications
+        article.publication-card
+          if publication.images && publication.images.length
+            a(href=`/publications/${publication.id}`)
+              img.publication-card__image(src=publication.images[0].url, alt=publication.title)
+
+          div.publication-card__body
+            h2
+              a(href=`/publications/${publication.id}`)= publication.title
+
+            if publication.author
+              p.publication-card__author
+                | Por 
+                a(href=`/users/${publication.author.id}`)= publication.author.nickname
+
+            if publication.description
+              p= publication.description
+
+            if publication.tags && publication.tags.length
+              div.tags
+                each tag in publication.tags
+                  span.tag ##{tag.name}
+
+            form(action=`/collections/${collection.id}/publications/${publication.id}/remove`, method="POST")
+              button.btn.btn-secondary(type="submit") Quitar de la colección
+  else
+    section.empty-state
+      h2 Esta colección está vacía
+      p Guardá publicaciones desde el detalle de cada publicación.
+      a.btn(href="/publications") Explorar publicaciones

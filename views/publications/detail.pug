@@ -18,6 +18,24 @@ block content
           each tag in publication.tags
             span.tag ##{tag.name}
 
+            if isAuthenticated
+                section.save-publication-box
+                    h3 Guardar publicación
+
+                    if userCollections && userCollections.length
+                    form(action=`/collections/publications/${publication.id}/add`, method="POST")
+                        div.form-group
+                        label(for="collection_id") Elegí una colección
+                        select(id="collection_id", name="collection_id", required)
+                            option(value="") Seleccionar colección
+                            each collection in userCollections
+                            option(value=collection.id)= collection.title
+
+                        button.btn(type="submit") Guardar en colección
+                    else
+                    p Todavía no tenés colecciones.
+                    a.btn(href="/collections") Crear colección
+
     section.image-gallery
       each image in publication.images
         figure.image-card
