@@ -11,6 +11,10 @@ module.exports = (sequelize) => {
     foreignKey: 'image_id',
     as: 'comments'
   });
+  Image.hasMany(models.Rating, {
+    foreignKey: 'image_id',
+    as: 'ratings'
+  });
     }
   }
 
