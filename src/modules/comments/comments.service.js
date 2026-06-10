@@ -5,6 +5,8 @@ const {
   User
 } = require('../../database/models');
 
+const { createNotification } = require('../notifications/notifications.service');
+
 const getImageWithPublication = async (imageId) => {
   return Image.findByPk(imageId, {
     include: [
@@ -44,6 +46,17 @@ const createComment = async ({ imageId, userId, content }) => {
     content: content.trim(),
     is_deleted: false
   });
+
+  if (image.publication && Number(image.publication.user_id) !== Number(userId)) {
+  await createNotification({
+    userId: image.publication.user_id,
+    actorId: userId,
+    type: 'comment',
+    entityType: 'publication',
+    entityId: image.publication_id,
+    message: `Comentaron una imagen de tu publicación "${image.publication.title}".`
+  });
+}
 
   return {
     comment,
