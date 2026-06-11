@@ -1,9 +1,11 @@
 const {
   sequelize,
   ImageReport,
+  CommentReport,
   Image,
   Publication,
-  User
+  User,
+  Comment
 } = require('../../database/models');
 
 const { createNotification } = require('../notifications/notifications.service');
@@ -21,6 +23,35 @@ const getImageWithPublication = async (imageId) => {
             model: User,
             as: 'author',
             attributes: ['id', 'nickname']
+          }
+        ]
+      }
+    ]
+  });
+};
+
+const getCommentWithContext = async (commentId) => {
+  return Comment.findByPk(commentId, {
+    include: [
+      {
+        model: User,
+        as: 'author',
+        attributes: ['id', 'nickname']
+      },
+      {
+        model: Image,
+        as: 'image',
+        include: [
+          {
+            model: Publication,
+            as: 'publication',
+            include: [
+              {
+                model: User,
+                as: 'author',
+                attributes: ['id', 'nickname']
+              }
+            ]
           }
         ]
       }
@@ -108,14 +139,14 @@ const createImageReport = async ({
     }
 
     await createNotification({
-  userId: image.publication.user_id,
-  actorId: userId,
-  type: 'report',
-  entityType: 'publication',
-  entityId: image.publication_id,
-  message: `Una imagen de tu publicación "${image.publication.title}" recibió una denuncia.`,
-  transaction
-});
+      userId: image.publication.user_id,
+      actorId: userId,
+      type: 'report',
+      entityType: 'publication',
+      entityId: image.publication_id,
+      message: `Una imagen de tu publicación "${image.publication.title}" recibió una denuncia.`,
+      transaction
+    });
 
     return {
       publicationId: image.publication_id
@@ -123,6 +154,77 @@ const createImageReport = async ({
   });
 };
 
+const createCommentReport = async ({
+  commentId,
+  userId,
+  reasonType,
+  description
+}) => {
+  return sequelize.transaction(async (transaction) => {
+    const comment = await getCommentWithContext(commentId);
+
+    if (!comment || comment.is_deleted) {
+      throw new Error('El comentario no existe o fue eliminado.');
+    }
+
+    if (!comment.image || !comment.image.publication) {
+      throw new Error('No se encontró la publicación asociada.');
+    }
+
+    const publication = comment.image.publication;
+
+    if (publication.status === 'disabled') {
+      throw new Error('La publicación no se encuentra disponible.');
+    }
+
+    if (Number(comment.user_id) === Number(userId)) {
+      throw new Error('No podés denunciar tu propio comentario.');
+    }
+
+    if (Number(comment.user_id) === Number(publication.user_id)) {
+      throw new Error('No se pueden denunciar comentarios del autor de la publicación.');
+    }
+
+    const existingReport = await CommentReport.findOne({
+      where: {
+        comment_id: comment.id,
+        user_id: userId
+      },
+      transaction
+    });
+
+    if (existingReport) {
+      throw new Error('Ya denunciaste este comentario.');
+    }
+
+    await CommentReport.create(
+      {
+        comment_id: comment.id,
+        user_id: userId,
+        reason_type: reasonType,
+        description: description.trim(),
+        status: 'pending'
+      },
+      { transaction }
+    );
+
+    await createNotification({
+      userId: publication.user_id,
+      actorId: userId,
+      type: 'report',
+      entityType: 'comment',
+      entityId: comment.id,
+      message: `Un comentario en tu publicación "${publication.title}" recibió una denuncia.`,
+      transaction
+    });
+
+    return {
+      publicationId: publication.id
+    };
+  });
+};
+
 module.exports = {
-  createImageReport
+  createImageReport,
+  createCommentReport
 };

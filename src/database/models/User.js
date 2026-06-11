@@ -57,6 +57,16 @@ User.hasMany(models.ImageReport, {
   foreignKey: 'reviewed_by',
   as: 'reviewedImageReports'
 });
+
+User.hasMany(models.CommentReport, {
+  foreignKey: 'user_id',
+  as: 'commentReports'
+});
+
+User.hasMany(models.CommentReport, {
+  foreignKey: 'reviewed_by',
+  as: 'reviewedCommentReports'
+});
     }
   }
 

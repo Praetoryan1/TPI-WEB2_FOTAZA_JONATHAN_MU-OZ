@@ -8,7 +8,8 @@ const {
   User,
   Comment,
   Rating,
-  ImageReport
+  ImageReport,
+  CommentReport
 } = require('../../database/models');
 
 const normalizeTags = (tagsText) => {
@@ -136,15 +137,27 @@ const getPublicationById = async (id, currentUser = null) => {
         is_deleted: false
       },
       required: false,
-      include: [
-        {
-          model: User,
-          as: 'author',
-          attributes: ['id', 'nickname', 'profile_image_url']
-        }
-      ]
-    }
-  ];
+include: [
+      {
+        model: User,
+        as: 'author',
+        attributes: ['id', 'nickname', 'profile_image_url']
+      },
+      ...(currentUser
+        ? [
+            {
+              model: CommentReport,
+              as: 'reports',
+              where: {
+                user_id: currentUser.id
+              },
+              required: false
+            }
+          ]
+        : [])
+    ]
+  }
+];
 
   if (currentUser) {
     imageIncludes.push({
