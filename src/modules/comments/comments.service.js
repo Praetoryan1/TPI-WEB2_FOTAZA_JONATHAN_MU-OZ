@@ -88,7 +88,137 @@ const toggleComments = async ({ imageId, userId }) => {
   };
 };
 
+const { CommentReport } = require('../../database/models');
+
+const getReportsForAuthor = async (authorId) => {
+  return CommentReport.findAll({
+    where: {
+      status: 'pending'
+    },
+    include: [
+      {
+        model: Comment,
+        as: 'comment',
+        include: [
+          {
+            model: User,
+            as: 'author',
+            attributes: ['id', 'nickname', 'email']
+          },
+          {
+            model: Image,
+            as: 'image',
+            include: [
+              {
+                model: Publication,
+                as: 'publication',
+                where: {
+                  user_id: authorId
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        model: User,
+        as: 'reporter',
+        attributes: ['id', 'nickname', 'email']
+      }
+    ],
+    order: [['created_at', 'DESC']]
+  });
+};
+
+const deleteReportedComment = async ({ commentId, authorId }) => {
+  const comment = await Comment.findByPk(commentId, {
+    include: [
+      {
+        model: Image,
+        as: 'image',
+        include: [
+          {
+            model: Publication,
+            as: 'publication'
+          }
+        ]
+      }
+    ]
+  });
+
+  if (!comment || !comment.image || !comment.image.publication) {
+    throw new Error('El comentario no existe.');
+  }
+
+  if (Number(comment.image.publication.user_id) !== Number(authorId)) {
+    throw new Error('No tenés permiso para eliminar este comentario.');
+  }
+
+  comment.is_deleted = true;
+  await comment.save();
+
+  await CommentReport.update(
+    {
+      status: 'accepted',
+      reviewed_by: authorId,
+      reviewed_at: new Date()
+    },
+    {
+      where: {
+        comment_id: commentId,
+        status: 'pending'
+      }
+    }
+  );
+
+  return comment;
+};
+
+const dismissCommentReports = async ({ commentId, authorId }) => {
+  const comment = await Comment.findByPk(commentId, {
+    include: [
+      {
+        model: Image,
+        as: 'image',
+        include: [
+          {
+            model: Publication,
+            as: 'publication'
+          }
+        ]
+      }
+    ]
+  });
+
+  if (!comment || !comment.image || !comment.image.publication) {
+    throw new Error('El comentario no existe.');
+  }
+
+  if (Number(comment.image.publication.user_id) !== Number(authorId)) {
+    throw new Error('No tenés permiso para revisar este comentario.');
+  }
+
+  await CommentReport.update(
+    {
+      status: 'dismissed',
+      reviewed_by: authorId,
+      reviewed_at: new Date()
+    },
+    {
+      where: {
+        comment_id: commentId,
+        status: 'pending'
+      }
+    }
+  );
+
+  return comment;
+};
+
 module.exports = {
   createComment,
-  toggleComments
+  toggleComments,
+  getReportsForAuthor,
+  deleteReportedComment,
+  dismissCommentReports
 };

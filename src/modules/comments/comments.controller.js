@@ -1,5 +1,12 @@
+const {
+  createComment,
+  toggleComments,
+  getReportsForAuthor,
+  deleteReportedComment,
+  dismissCommentReports
+} = require('./comments.service');
+
 const { validateComment } = require('./comments.validator');
-const { createComment, toggleComments } = require('./comments.service');
 
 const store = async (req, res) => {
   try {
@@ -36,7 +43,45 @@ const toggle = async (req, res) => {
   }
 };
 
+const reports = async (req, res) => {
+  const commentReports = await getReportsForAuthor(req.user.id);
+
+  return res.render('comments/reports', {
+    title: 'Denuncias de comentarios',
+    commentReports
+  });
+};
+
+const deleteReported = async (req, res) => {
+  try {
+    await deleteReportedComment({
+      commentId: req.params.commentId,
+      authorId: req.user.id
+    });
+
+    return res.redirect('/comments/reports');
+  } catch (error) {
+    return res.redirect('/comments/reports');
+  }
+};
+
+const dismissReports = async (req, res) => {
+  try {
+    await dismissCommentReports({
+      commentId: req.params.commentId,
+      authorId: req.user.id
+    });
+
+    return res.redirect('/comments/reports');
+  } catch (error) {
+    return res.redirect('/comments/reports');
+  }
+};
+
 module.exports = {
   store,
-  toggle
+  toggle,
+  reports,
+  deleteReported,
+  dismissReports
 };
