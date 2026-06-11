@@ -132,6 +132,42 @@ block content
                   strong= comment.author ? comment.author.nickname : 'Usuario'
                   p= comment.content
                   small= new Date(comment.createdAt).toLocaleString('es-AR')
+
+                  if isAuthenticated && comment.author && Number(currentUser.id) !== Number(comment.author.id)
+                    if comment.reports && comment.reports.length
+                      div.report-info
+                        p Ya denunciaste este comentario.
+                        form(action=`/reports/comments/${comment.id}/cancel`, method="POST")
+                          input(type="hidden", name="publication_id", value=publication.id)
+                          button.btn.btn-secondary(type="submit") Cancelar denuncia
+                    else
+                      details.report-box
+                        summary Denunciar comentario
+                        form(action=`/reports/comments/${comment.id}`, method="POST")
+                          input(type="hidden", name="publication_id", value=publication.id)
+
+                          div.form-group
+                            label(for=`comment-reason-${comment.id}`) Motivo
+                            select(id=`comment-reason-${comment.id}`, name="reason_type", required)
+                              option(value="") Seleccionar motivo
+                              option(value="inappropriate") Contenido inapropiado
+                              option(value="offensive") Contenido ofensivo
+                              option(value="spam") Spam
+                              option(value="harassment") Acoso
+                              option(value="other") Otro
+
+                          div.form-group
+                            label(for=`comment-description-${comment.id}`) Descripción
+                            textarea(
+                              id=`comment-description-${comment.id}`,
+                              name="description",
+                              rows="3",
+                              maxlength="1000",
+                              placeholder="Explicá brevemente el motivo...",
+                              required
+                            )
+
+                          button.btn.btn-secondary(type="submit") Enviar denuncia
             else
               p Todavía no hay comentarios en esta imagen.
 

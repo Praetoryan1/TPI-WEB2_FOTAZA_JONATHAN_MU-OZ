@@ -5,7 +5,8 @@ const {
 
 const {
   createImageReport,
-  createCommentReport
+  createCommentReport,
+  cancelCommentReport
 } = require('./reports.service');
 
 const storeImageReport = async (req, res) => {
@@ -50,7 +51,21 @@ const storeCommentReport = async (req, res) => {
   }
 };
 
+const cancelOwnCommentReport = async (req, res) => {
+  try {
+    await cancelCommentReport({
+      commentId: req.params.commentId,
+      userId: req.user.id
+    });
+
+    return res.redirect(`/publications/${req.body.publication_id || ''}`);
+  } catch (error) {
+    return res.redirect(`/publications/${req.body.publication_id || ''}`);
+  }
+};
+
 module.exports = {
   storeImageReport,
-  storeCommentReport
+  storeCommentReport,
+  cancelOwnCommentReport
 };

@@ -1,0 +1,52 @@
+extends ../layouts/main.pug
+
+block content
+  section.page-header
+    div
+      h1 Denuncias de comentarios
+      p Revisá comentarios denunciados dentro de tus publicaciones.
+
+  if commentReports && commentReports.length
+    section.moderation-list
+      each report in commentReports
+        article.moderation-card
+          header.moderation-card__header
+            div
+              h2 Comentario denunciado
+
+              if report.comment && report.comment.image && report.comment.image.publication
+                p
+                  | Publicación: 
+                  a(href=`/publications/${report.comment.image.publication.id}`)= report.comment.image.publication.title
+
+              if report.comment && report.comment.author
+                p Autor del comentario: #{report.comment.author.nickname}
+
+              if report.reporter
+                p Denunciante: #{report.reporter.nickname}
+
+              p
+                strong Motivo:
+                |  #{report.reason_type}
+
+              p
+                strong Descripción:
+                |  #{report.description}
+
+            div.moderation-actions
+              form(action=`/comments/${report.comment_id}/delete-reported`, method="POST")
+                button.btn(type="submit") Borrar comentario
+
+              form(action=`/comments/${report.comment_id}/dismiss-reports`, method="POST")
+                button.btn.btn-secondary(type="submit") Desestimar denuncia
+
+          if report.comment
+            section.report-item
+              p
+                strong Comentario:
+              p= report.comment.content
+              small= new Date(report.createdAt).toLocaleString('es-AR')
+  else
+    section.empty-state
+      h2 No hay denuncias de comentarios pendientes
+      p Cuando denuncien comentarios en tus publicaciones, aparecerán en esta sección.

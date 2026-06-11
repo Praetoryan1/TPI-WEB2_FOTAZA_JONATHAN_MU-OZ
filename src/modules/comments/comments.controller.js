@@ -1,7 +1,7 @@
 const {
   createComment,
   toggleComments,
-  getReportsForAuthor,
+  getReportsForReviewer,
   deleteReportedComment,
   dismissCommentReports
 } = require('./comments.service');
@@ -44,7 +44,10 @@ const toggle = async (req, res) => {
 };
 
 const reports = async (req, res) => {
-  const commentReports = await getReportsForAuthor(req.user.id);
+  const commentReports = await getReportsForReviewer({
+    reviewerId: req.user.id,
+    reviewerRole: req.user.role ? req.user.role.name : 'user'
+  });
 
   return res.render('comments/reports', {
     title: 'Denuncias de comentarios',
@@ -56,11 +59,13 @@ const deleteReported = async (req, res) => {
   try {
     await deleteReportedComment({
       commentId: req.params.commentId,
-      authorId: req.user.id
+      reviewerId: req.user.id,
+      reviewerRole: req.user.role ? req.user.role.name : 'user'
     });
 
     return res.redirect('/comments/reports');
   } catch (error) {
+    console.error('Error al borrar comentario denunciado:', error.message);
     return res.redirect('/comments/reports');
   }
 };
@@ -69,11 +74,13 @@ const dismissReports = async (req, res) => {
   try {
     await dismissCommentReports({
       commentId: req.params.commentId,
-      authorId: req.user.id
+      reviewerId: req.user.id,
+      reviewerRole: req.user.role ? req.user.role.name : 'user'
     });
 
     return res.redirect('/comments/reports');
   } catch (error) {
+    console.error('Error al desestimar denuncia de comentario:', error.message);
     return res.redirect('/comments/reports');
   }
 };

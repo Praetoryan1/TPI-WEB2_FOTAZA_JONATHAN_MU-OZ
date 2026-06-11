@@ -181,10 +181,6 @@ const createCommentReport = async ({
       throw new Error('No podés denunciar tu propio comentario.');
     }
 
-    if (Number(comment.user_id) === Number(publication.user_id)) {
-      throw new Error('No se pueden denunciar comentarios del autor de la publicación.');
-    }
-
     const existingReport = await CommentReport.findOne({
       where: {
         comment_id: comment.id,
@@ -224,7 +220,26 @@ const createCommentReport = async ({
   });
 };
 
+const cancelCommentReport = async ({ commentId, userId }) => {
+  const report = await CommentReport.findOne({
+    where: {
+      comment_id: commentId,
+      user_id: userId,
+      status: 'pending'
+    }
+  });
+
+  if (!report) {
+    throw new Error('No existe una denuncia pendiente para cancelar.');
+  }
+
+  await report.destroy();
+
+  return true;
+};
+
 module.exports = {
   createImageReport,
-  createCommentReport
+  createCommentReport,
+  cancelCommentReport
 };

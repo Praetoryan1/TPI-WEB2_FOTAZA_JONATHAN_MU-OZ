@@ -2,7 +2,8 @@ const {
   Comment,
   Image,
   Publication,
-  User
+  User,
+  CommentReport
 } = require('../../database/models');
 
 const { createNotification } = require('../notifications/notifications.service');
@@ -88,9 +89,19 @@ const toggleComments = async ({ imageId, userId }) => {
   };
 };
 
-const { CommentReport } = require('../../database/models');
+const isPrivilegedReviewer = (roleName) => {
+  return roleName === 'admin' || roleName === 'validator';
+};
 
-const getReportsForAuthor = async (authorId) => {
+const getReportsForReviewer = async ({ reviewerId, reviewerRole }) => {
+  const isPrivileged = isPrivilegedReviewer(reviewerRole);
+
+  const publicationWhere = isPrivileged
+    ? {}
+    : {
+        user_id: reviewerId
+      };
+
   return CommentReport.findAll({
     where: {
       status: 'pending'
@@ -99,22 +110,32 @@ const getReportsForAuthor = async (authorId) => {
       {
         model: Comment,
         as: 'comment',
+        required: true,
         include: [
           {
             model: User,
             as: 'author',
-            attributes: ['id', 'nickname', 'email']
+            attributes: ['id', 'nickname', 'email'],
+            required: false
           },
           {
             model: Image,
             as: 'image',
+            required: true,
             include: [
               {
                 model: Publication,
                 as: 'publication',
-                where: {
-                  user_id: authorId
-                }
+                required: true,
+                where: publicationWhere,
+                include: [
+                  {
+                    model: User,
+                    as: 'author',
+                    attributes: ['id', 'nickname', 'email'],
+                    required: false
+                  }
+                ]
               }
             ]
           }
@@ -123,14 +144,15 @@ const getReportsForAuthor = async (authorId) => {
       {
         model: User,
         as: 'reporter',
-        attributes: ['id', 'nickname', 'email']
+        attributes: ['id', 'nickname', 'email'],
+        required: false
       }
     ],
     order: [['created_at', 'DESC']]
   });
 };
 
-const deleteReportedComment = async ({ commentId, authorId }) => {
+const canReviewCommentReport = async ({ commentId, reviewerId, reviewerRole }) => {
   const comment = await Comment.findByPk(commentId, {
     include: [
       {
@@ -150,9 +172,24 @@ const deleteReportedComment = async ({ commentId, authorId }) => {
     throw new Error('El comentario no existe.');
   }
 
-  if (Number(comment.image.publication.user_id) !== Number(authorId)) {
-    throw new Error('No tenés permiso para eliminar este comentario.');
+  const isPublicationAuthor =
+    Number(comment.image.publication.user_id) === Number(reviewerId);
+
+  const isPrivileged = isPrivilegedReviewer(reviewerRole);
+
+  if (!isPublicationAuthor && !isPrivileged) {
+    throw new Error('No tenés permiso para revisar esta denuncia.');
   }
+
+  return comment;
+};
+
+const deleteReportedComment = async ({ commentId, reviewerId, reviewerRole }) => {
+  const comment = await canReviewCommentReport({
+    commentId,
+    reviewerId,
+    reviewerRole
+  });
 
   comment.is_deleted = true;
   await comment.save();
@@ -160,7 +197,7 @@ const deleteReportedComment = async ({ commentId, authorId }) => {
   await CommentReport.update(
     {
       status: 'accepted',
-      reviewed_by: authorId,
+      reviewed_by: reviewerId,
       reviewed_at: new Date()
     },
     {
@@ -174,34 +211,17 @@ const deleteReportedComment = async ({ commentId, authorId }) => {
   return comment;
 };
 
-const dismissCommentReports = async ({ commentId, authorId }) => {
-  const comment = await Comment.findByPk(commentId, {
-    include: [
-      {
-        model: Image,
-        as: 'image',
-        include: [
-          {
-            model: Publication,
-            as: 'publication'
-          }
-        ]
-      }
-    ]
+const dismissCommentReports = async ({ commentId, reviewerId, reviewerRole }) => {
+  const comment = await canReviewCommentReport({
+    commentId,
+    reviewerId,
+    reviewerRole
   });
-
-  if (!comment || !comment.image || !comment.image.publication) {
-    throw new Error('El comentario no existe.');
-  }
-
-  if (Number(comment.image.publication.user_id) !== Number(authorId)) {
-    throw new Error('No tenés permiso para revisar este comentario.');
-  }
 
   await CommentReport.update(
     {
       status: 'dismissed',
-      reviewed_by: authorId,
+      reviewed_by: reviewerId,
       reviewed_at: new Date()
     },
     {
@@ -218,7 +238,7 @@ const dismissCommentReports = async ({ commentId, authorId }) => {
 module.exports = {
   createComment,
   toggleComments,
-  getReportsForAuthor,
+  getReportsForReviewer,
   deleteReportedComment,
   dismissCommentReports
 };
