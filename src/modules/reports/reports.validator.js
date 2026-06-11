@@ -15,8 +15,8 @@ const validateImageReport = ({ reason_type, description }) => {
 
   const cleanDescription = description ? description.trim() : '';
 
-  if (cleanDescription.length < 10) {
-    errors.push('La descripción debe tener al menos 10 caracteres.');
+  if (cleanDescription.length < 1) {
+    errors.push('La descripción debe tener al menos 1 caracter.');
   }
 
   if (cleanDescription.length > 1000) {

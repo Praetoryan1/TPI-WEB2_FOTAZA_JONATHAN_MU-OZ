@@ -6,7 +6,8 @@ const createNotification = async ({
   type,
   entityType = null,
   entityId = null,
-  message
+  message,
+  transaction = null
 }) => {
   if (!userId || !type || !message) {
     return null;
@@ -16,15 +17,18 @@ const createNotification = async ({
     return null;
   }
 
-  return Notification.create({
-    user_id: userId,
-    actor_id: actorId,
-    type,
-    entity_type: entityType,
-    entity_id: entityId,
-    message,
-    is_read: false
-  });
+  return Notification.create(
+    {
+      user_id: userId,
+      actor_id: actorId,
+      type,
+      entity_type: entityType,
+      entity_id: entityId,
+      message,
+      is_read: false
+    },
+    transaction ? { transaction } : undefined
+  );
 };
 
 const getUserNotifications = async (userId) => {

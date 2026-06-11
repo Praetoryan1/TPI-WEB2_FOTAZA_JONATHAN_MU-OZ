@@ -35,6 +35,10 @@ const disable = async (req, res) => {
 
     return res.redirect('/moderation');
   } catch (error) {
+    console.error('Error al dar de baja publicación:', error);
+    console.error('Mensaje MySQL:', error.parent?.sqlMessage);
+    console.error('SQL:', error.sql);
+
     return res.redirect('/moderation');
   }
 };

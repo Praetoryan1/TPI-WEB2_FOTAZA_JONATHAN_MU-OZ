@@ -95,7 +95,8 @@ const rateImage = async ({ imageId, userId, value }) => {
   type: 'rating',
   entityType: 'publication',
   entityId: image.publication_id,
-  message: `Valoraron una imagen de tu publicación "${image.publication.title}".`
+  message: `Valoraron una imagen de tu publicación "${image.publication.title}".`,
+  transaction
 });
 
     return {

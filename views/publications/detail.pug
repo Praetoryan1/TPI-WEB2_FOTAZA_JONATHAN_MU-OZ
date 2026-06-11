@@ -78,6 +78,38 @@ block content
                 a(href="/auth/login") iniciar sesión
                 | .
 
+            if isAuthenticated && !isAuthor
+              if image.reports && image.reports.length
+                p.report-info Ya denunciaste esta imagen.
+              else
+                details.report-box
+                  summary Denunciar imagen
+                  form(action=`/reports/images/${image.id}`, method="POST")
+                    input(type="hidden", name="publication_id", value=publication.id)
+
+                    div.form-group
+                      label(for=`reason-${image.id}`) Motivo
+                      select(id=`reason-${image.id}`, name="reason_type", required)
+                        option(value="") Seleccionar motivo
+                        option(value="inappropriate") Contenido inapropiado
+                        option(value="copyright") Problema de copyright
+                        option(value="offensive") Contenido ofensivo
+                        option(value="spam") Spam o contenido engañoso
+                        option(value="other") Otro
+
+                    div.form-group
+                      label(for=`description-${image.id}`) Descripción
+                      textarea(
+                        id=`description-${image.id}`,
+                        name="description",
+                        rows="3",
+                        maxlength="1000",
+                        placeholder="Explicá brevemente el motivo de la denuncia...",
+                        required
+                      )
+
+                    button.btn.btn-secondary(type="submit") Enviar denuncia
+
             if image.comments_enabled
               p Comentarios habilitados
             else

@@ -1,0 +1,63 @@
+extends ../layouts/main.pug
+
+block content
+  section.page-header
+    div
+      h1 Moderación de contenidos
+      p Publicaciones que acumularon denuncias y requieren revisión.
+
+  if publications && publications.length
+    section.moderation-list
+      each publication in publications
+        article.moderation-card
+          header.moderation-card__header
+            div
+              h2= publication.title
+
+              if publication.author
+                p
+                  | Autor: 
+                  a(href=`/users/${publication.author.id}`)= publication.author.nickname
+                  |  · Publicaciones bajadas: #{publication.author.banned_publications_count}
+
+              p Estado: #{publication.status}
+
+            div.moderation-actions
+              a.btn.btn-secondary(href=`/publications/${publication.id}`) Ver publicación
+
+              form(action=`/moderation/publications/${publication.id}/dismiss`, method="POST")
+                button.btn.btn-secondary(type="submit") Desestimar denuncias
+
+              form(action=`/moderation/publications/${publication.id}/disable`, method="POST")
+                button.btn(type="submit") Dar de baja
+
+          each image in publication.images
+            section.moderation-image
+              if image.url
+                img(src=image.url, alt=publication.title)
+
+              if image.reports && image.reports.length
+                h3 Denuncias de esta imagen
+
+                each report in image.reports
+                  article.report-item
+                    p
+                      strong Motivo:
+                      |  #{report.reason_type}
+
+                    p
+                      strong Descripción:
+                      |  #{report.description}
+
+                    if report.reporter
+                      p
+                        strong Denunciante:
+                        |  #{report.reporter.nickname}
+
+                    small= new Date(report.createdAt).toLocaleString('es-AR')
+              else
+                p Esta imagen no tiene denuncias pendientes.
+  else
+    section.empty-state
+      h2 No hay publicaciones pendientes de revisión
+      p Cuando una publicación acumule denuncias suficientes aparecerá en esta sección.

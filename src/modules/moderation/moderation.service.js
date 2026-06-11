@@ -93,13 +93,14 @@ const dismissPublicationReports = async ({ publicationId, reviewerId }) => {
     );
 
     await createNotification({
-      userId: publication.user_id,
-      actorId: reviewerId,
-      type: 'report',
-      entityType: 'publication',
-      entityId: publication.id,
-      message: `Las denuncias sobre tu publicación "${publication.title}" fueron desestimadas.`
-    });
+  userId: publication.user_id,
+  actorId: reviewerId,
+  type: 'report',
+  entityType: 'publication',
+  entityId: publication.id,
+  message: `Las denuncias sobre tu publicación "${publication.title}" fueron desestimadas.`,
+  transaction
+});
 
     return publication;
   });
@@ -164,13 +165,15 @@ const disablePublication = async ({ publicationId, reviewerId }) => {
       );
 
       await createNotification({
-        userId: author.id,
-        actorId: reviewerId,
-        type: 'report',
-        entityType: 'publication',
-        entityId: publication.id,
-        message: `Tu publicación "${publication.title}" fue dada de baja por moderación.`
-      });
+  userId: author.id,
+  actorId: reviewerId,
+  type: 'report',
+  entityType: 'publication',
+  entityId: publication.id,
+  message: `Tu publicación "${publication.title}" fue dada de baja por moderación.`,
+  transaction
+});
+
     }
 
     return publication;

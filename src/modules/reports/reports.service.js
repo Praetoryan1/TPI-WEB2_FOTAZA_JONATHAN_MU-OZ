@@ -108,13 +108,14 @@ const createImageReport = async ({
     }
 
     await createNotification({
-      userId: image.publication.user_id,
-      actorId: userId,
-      type: 'report',
-      entityType: 'publication',
-      entityId: image.publication_id,
-      message: `Una imagen de tu publicación "${image.publication.title}" recibió una denuncia.`
-    });
+  userId: image.publication.user_id,
+  actorId: userId,
+  type: 'report',
+  entityType: 'publication',
+  entityId: image.publication_id,
+  message: `Una imagen de tu publicación "${image.publication.title}" recibió una denuncia.`,
+  transaction
+});
 
     return {
       publicationId: image.publication_id
