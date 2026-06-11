@@ -7,7 +7,8 @@ const {
   PublicationTag,
   User,
   Comment,
-  Rating
+  Rating,
+  ImageReport
 } = require('../../database/models');
 
 const normalizeTags = (tagsText) => {
@@ -154,7 +155,17 @@ const getPublicationById = async (id, currentUser = null) => {
       },
       required: false
     });
+
+    imageIncludes.push({
+    model: ImageReport,
+    as: 'reports',
+    where: {
+      user_id: currentUser.id
+    },
+    required: false
+  });
   }
+  
 
   const publication = await Publication.findOne({
     where: {

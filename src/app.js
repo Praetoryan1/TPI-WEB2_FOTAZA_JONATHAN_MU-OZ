@@ -12,6 +12,8 @@ const followersRoutes = require('./modules/followers/followers.routes');
 const notificationsRoutes = require('./modules/notifications/notifications.routes');
 const collectionsRoutes = require('./modules/collections/collections.routes');
 const searchRoutes = require('./modules/search/search.routes');
+const reportsRoutes = require('./modules/reports/reports.routes');
+const moderationRoutes = require('./modules/moderation/moderation.routes');
 
 const app = express();
 
@@ -34,6 +36,8 @@ app.use('/followers', followersRoutes);
 app.use('/notifications', notificationsRoutes);
 app.use('/collections', collectionsRoutes);
 app.use('/search', searchRoutes);
+app.use('/reports', reportsRoutes);
+app.use('/moderation', moderationRoutes);
 
 app.get('/', (req, res) => {
   res.render('home/index', {
