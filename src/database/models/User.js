@@ -67,6 +67,31 @@ User.hasMany(models.CommentReport, {
   foreignKey: 'reviewed_by',
   as: 'reviewedCommentReports'
 });
+
+User.hasMany(models.InterestRequest, {
+  foreignKey: 'buyer_id',
+  as: 'interestRequestsMade'
+});
+
+User.hasMany(models.InterestRequest, {
+  foreignKey: 'author_id',
+  as: 'interestRequestsReceived'
+});
+
+User.hasMany(models.Conversation, {
+  foreignKey: 'buyer_id',
+  as: 'buyerConversations'
+});
+
+User.hasMany(models.Conversation, {
+  foreignKey: 'seller_id',
+  as: 'sellerConversations'
+});
+
+User.hasMany(models.Message, {
+  foreignKey: 'sender_id',
+  as: 'sentMessages'
+});
     }
   }
 
