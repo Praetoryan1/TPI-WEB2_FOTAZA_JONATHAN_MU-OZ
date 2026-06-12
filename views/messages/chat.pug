@@ -1,0 +1,43 @@
+extends ../layouts/main.pug
+
+block content
+  section.page-header
+    div
+      h1 Conversación privada
+
+      if conversation.image && conversation.image.publication
+        p
+          | Imagen relacionada con la publicación: 
+          a(href=`/publications/${conversation.image.publication.id}`)= conversation.image.publication.title
+
+      if Number(currentUser.id) === Number(conversation.buyer_id)
+        p Hablás con #{conversation.seller.nickname}
+      else
+        p Hablás con #{conversation.buyer.nickname}
+
+    a.btn.btn-secondary(href="/messages") Volver a mensajes
+
+  section.chat-box
+    if conversation.messages && conversation.messages.length
+      each message in conversation.messages
+        article.message-card(class=Number(message.sender_id) === Number(currentUser.id) ? 'message-card--own' : 'message-card--other')
+          strong= message.sender ? message.sender.nickname : 'Usuario'
+          p= message.content
+          small= new Date(message.createdAt).toLocaleString('es-AR')
+    else
+      p Todavía no hay mensajes.
+
+  section.message-form-box
+    form(action=`/messages/${conversation.id}`, method="POST")
+      div.form-group
+        label(for="content") Nuevo mensaje
+        textarea(
+          id="content",
+          name="content",
+          rows="4",
+          maxlength="1000",
+          placeholder="Escribí tu mensaje...",
+          required
+        )
+
+      button.btn(type="submit") Enviar mensaje

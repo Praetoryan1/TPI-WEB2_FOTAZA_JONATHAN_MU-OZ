@@ -1,0 +1,34 @@
+extends ../layouts/main.pug
+
+block content
+  section.page-header
+    div
+      h1 Mensajes
+      p Conversaciones privadas generadas por interés en imágenes.
+
+  if conversations && conversations.length
+    section.conversations-list
+      each conversation in conversations
+        article.conversation-card
+          div
+            if conversation.image && conversation.image.publication
+              h2= conversation.image.publication.title
+            else
+              h2 Conversación
+
+            if Number(currentUser.id) === Number(conversation.buyer_id)
+              p Hablás con #{conversation.seller.nickname}
+            else
+              p Hablás con #{conversation.buyer.nickname}
+
+            if conversation.messages && conversation.messages.length
+              - const lastMessage = conversation.messages[conversation.messages.length - 1]
+              p Último mensaje: #{lastMessage.content}
+            else
+              p Sin mensajes todavía.
+
+          a.btn(href=`/messages/${conversation.id}`) Abrir chat
+  else
+    section.empty-state
+      h2 No tenés conversaciones
+      p Cuando alguien marque “Me interesa” o vos contactes a un autor, aparecerá acá.

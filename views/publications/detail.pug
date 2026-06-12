@@ -79,6 +79,24 @@ block content
                 | .
 
             if isAuthenticated && !isAuthor
+              details.interest-box
+                summary Me interesa esta imagen
+                form(action=`/interests/images/${image.id}`, method="POST")
+                  input(type="hidden", name="publication_id", value=publication.id)
+
+                  div.form-group
+                    label(for=`interest-message-${image.id}`) Mensaje opcional
+                    textarea(
+                      id=`interest-message-${image.id}`,
+                      name="message",
+                      rows="3",
+                      maxlength="500",
+                      placeholder="Podés dejarle un mensaje al autor..."
+                    )
+
+                  button.btn(type="submit") Contactar al autor
+
+            if isAuthenticated && !isAuthor
               if image.reports && image.reports.length
                 p.report-info Ya denunciaste esta imagen.
               else

@@ -546,3 +546,81 @@ select {
   margin-bottom: 12px;
   border: 1px solid #e5e7eb;
 }
+
+.interest-box {
+  margin-top: 16px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.interest-box summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: #1d4ed8;
+}
+
+.interest-box form {
+  margin-top: 14px;
+}
+
+.conversations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.conversation-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.chat-box {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.message-card {
+  max-width: 70%;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.message-card--own {
+  margin-left: auto;
+  background: #eff6ff;
+}
+
+.message-card--other {
+  margin-right: auto;
+  background: #f9fafb;
+}
+
+.message-card p {
+  margin: 8px 0;
+}
+
+.message-card small {
+  color: #6b7280;
+}
+
+.message-form-box {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+}

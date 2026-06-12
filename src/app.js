@@ -14,6 +14,8 @@ const collectionsRoutes = require('./modules/collections/collections.routes');
 const searchRoutes = require('./modules/search/search.routes');
 const reportsRoutes = require('./modules/reports/reports.routes');
 const moderationRoutes = require('./modules/moderation/moderation.routes');
+const interestsRoutes = require('./modules/interests/interests.routes');
+const messagesRoutes = require('./modules/messages/messages.routes');
 
 const app = express();
 
@@ -38,6 +40,8 @@ app.use('/collections', collectionsRoutes);
 app.use('/search', searchRoutes);
 app.use('/reports', reportsRoutes);
 app.use('/moderation', moderationRoutes);
+app.use('/interests', interestsRoutes);
+app.use('/messages', messagesRoutes);
 
 app.get('/', (req, res) => {
   res.render('home/index', {
