@@ -1,5 +1,5 @@
 {
-  "name": "todefine",
+  "name": "tpi-web2-fotaza-jonathan-munoz",
   "version": "1.0.0",
   "description": "- Desarrollar y poner en práctica los conocimientos adquiridos en la asignatura a partir del desarrollo de un caso de estudio.",
   "main": "index.js",
@@ -14,16 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "todefinied"
+    "url": "https://github.com/Praetoryan1/TPI-WEB2_FOTAZA_JONATHAN_MU-OZ.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "private": true,
   "type": "commonjs",
-  "bugs": {
-    "url": "todefinied.com"
-  },
-  "homepage": "todefinied",
+  "homepage": "",
   "dependencies": {
     "@tailwindcss/cli": "^4.3.0",
     "bcrypt": "^6.0.0",
