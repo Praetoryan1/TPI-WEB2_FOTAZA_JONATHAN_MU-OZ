@@ -1,0 +1,7 @@
+﻿<svg width="900" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="600" fill="#fce7f3"/>
+  <circle cx="450" cy="280" r="150" fill="#db2777"/>
+  <circle cx="450" cy="280" r="90" fill="#f9a8d4"/>
+  <circle cx="450" cy="280" r="35" fill="#831843"/>
+  <text x="40" y="80" font-family="Arial" font-size="42" fill="#831843">Fotaza Demo 3</text>
+</svg>
