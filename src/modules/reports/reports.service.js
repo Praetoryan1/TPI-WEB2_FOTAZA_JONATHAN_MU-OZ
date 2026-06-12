@@ -81,27 +81,40 @@ const createImageReport = async ({
     }
 
     const existingReport = await ImageReport.findOne({
-      where: {
+    where: {
         image_id: image.id,
         user_id: userId
-      },
-      transaction
+    },
+    transaction
     });
 
-    if (existingReport) {
-      throw new Error('Ya denunciaste esta imagen.');
+    if (existingReport && existingReport.status === 'pending') {
+    throw new Error('Ya denunciaste esta imagen.');
     }
 
+    if (existingReport) {
+    await existingReport.update(
+        {
+        reason_type: reasonType,
+        description: description.trim(),
+        status: 'pending',
+        reviewed_by: null,
+        reviewed_at: null
+        },
+        { transaction }
+    );
+    } else {
     await ImageReport.create(
-      {
+        {
         image_id: image.id,
         user_id: userId,
         reason_type: reasonType,
         description: description.trim(),
         status: 'pending'
-      },
-      { transaction }
+        },
+        { transaction }
     );
+    }
 
     await Publication.update(
       {
@@ -182,27 +195,40 @@ const createCommentReport = async ({
     }
 
     const existingReport = await CommentReport.findOne({
-      where: {
+    where: {
         comment_id: comment.id,
         user_id: userId
-      },
-      transaction
+    },
+    transaction
     });
 
-    if (existingReport) {
-      throw new Error('Ya denunciaste este comentario.');
+    if (existingReport && existingReport.status === 'pending') {
+    throw new Error('Ya denunciaste este comentario.');
     }
 
+    if (existingReport) {
+    await existingReport.update(
+        {
+        reason_type: reasonType,
+        description: description.trim(),
+        status: 'pending',
+        reviewed_by: null,
+        reviewed_at: null
+        },
+        { transaction }
+    );
+    } else {
     await CommentReport.create(
-      {
+        {
         comment_id: comment.id,
         user_id: userId,
         reason_type: reasonType,
         description: description.trim(),
         status: 'pending'
-      },
-      { transaction }
+        },
+        { transaction }
     );
+    }
 
     await createNotification({
       userId: publication.user_id,

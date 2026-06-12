@@ -146,12 +146,13 @@ include: [
       ...(currentUser
         ? [
             {
-              model: CommentReport,
-              as: 'reports',
-              where: {
-                user_id: currentUser.id
-              },
-              required: false
+                model: CommentReport,
+                as: 'reports',
+                where: {
+                    user_id: currentUser.id,
+                    status: 'pending'
+                },
+                required: false
             }
           ]
         : [])
@@ -173,10 +174,11 @@ include: [
     model: ImageReport,
     as: 'reports',
     where: {
-      user_id: currentUser.id
+        user_id: currentUser.id,
+        status: 'pending'
     },
     required: false
-  });
+    });
   }
   
 
