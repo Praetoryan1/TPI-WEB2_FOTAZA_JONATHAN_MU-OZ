@@ -69,7 +69,6 @@ module.exports = {
         id: 1,
         publication_id: 1,
         url: '/img/demo-photo-1.svg',
-        public_id: null,
         alt_text: 'Imagen demo de paisaje',
         license: 'no_copyright',
         is_watermarked: false,
@@ -84,7 +83,6 @@ module.exports = {
         id: 2,
         publication_id: 2,
         url: '/img/demo-photo-2.svg',
-        public_id: null,
         alt_text: 'Imagen demo urbana',
         license: 'no_copyright',
         is_watermarked: true,
@@ -99,7 +97,6 @@ module.exports = {
         id: 3,
         publication_id: 3,
         url: '/img/demo-photo-3.svg',
-        public_id: null,
         alt_text: 'Imagen demo con copyright',
         license: 'copyright',
         is_watermarked: true,
@@ -214,7 +211,6 @@ module.exports = {
         user_id: 3,
         title: 'Favoritas Jonathan',
         description: 'Colección demo de Jonathan.',
-        is_private: true,
         created_at: now,
         updated_at: now
       },
@@ -223,7 +219,6 @@ module.exports = {
         user_id: 4,
         title: 'Inspiración Camila',
         description: 'Colección demo de Camila.',
-        is_private: true,
         created_at: now,
         updated_at: now
       }
