@@ -17,34 +17,41 @@ La plataforma permite registrar usuarios, publicar fotografías, comentar, valor
 * Multer para carga de imágenes locales
 * CSS personalizado
 
+## Requisitos previos
 
-## Instalación
+Para ejecutar el proyecto localmente se necesita tener instalado:
 
-Clonar el repositorio:
+* Node.js
+* npm
+* MySQL local, por ejemplo mediante XAMPP, WAMP, Laragon o una instalación propia de MySQL
+* Git
+
+## Instalación y ejecución local
+
+El proyecto está preparado para poder ejecutarse siguiendo estos pasos.
+
+### 1. Clonar el repositorio
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
 cd <NOMBRE_DEL_PROYECTO>
 ```
 
-Instalar dependencias:
+### 2. Instalar dependencias
 
 ```bash
 npm install
 ```
 
-Crear la base de datos en MySQL:
+### 3. Configurar variables de entorno
 
-```sql
-CREATE DATABASE fotaza_db
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_unicode_ci;
-```
+Crear un archivo `.env` en la raíz del proyecto tomando como base el archivo `.env.example`.
 
-Crear un archivo `.env` en la raíz del proyecto tomando como base `.env.example`:
+Ejemplo para ejecución local con XAMPP/MySQL usando usuario `root` sin contraseña:
 
 ```env
 PORT=3000
+NODE_ENV=development
 
 DB_HOST=localhost
 DB_PORT=3306
@@ -52,30 +59,60 @@ DB_NAME=fotaza_db
 DB_USER=root
 DB_PASSWORD=
 
-JWT_SECRET=change_this_secret
+JWT_SECRET=fotaza_secret_dev
 
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 ```
 
-Ejecutar migraciones y seeders:
+El archivo `.env.example` se incluye en el repositorio como referencia.
+
+### 4. Inicializar la base de datos
 
 ```bash
 npm run db:init
 ```
 
-Iniciar la aplicación:
+Este comando crea o verifica la base de datos configurada, ejecuta las migraciones y carga los datos iniciales de prueba.
+
+La base local utilizada por defecto es:
+
+```text
+fotaza_db
+```
+
+Si se usa XAMPP con la configuración por defecto, no es necesario crear manualmente la base desde phpMyAdmin, ya que el script de inicialización se encarga de crearla si no existe.
+
+### 5. Iniciar la aplicación
 
 ```bash
 npm start
 ```
 
-La aplicación quedará disponible en:
+Una vez iniciado el servidor, la aplicación queda disponible en:
 
 ```text
 http://localhost:3000
 ```
+
+## Flujo de ejecución requerido para corrección
+
+El proyecto puede ejecutarse siguiendo únicamente estos comandos y pasos:
+
+```bash
+npm install
+```
+
+```bash
+npm run db:init
+```
+
+```bash
+npm start
+```
+
+Antes de ejecutar `npm run db:init`, se debe configurar el archivo `.env` en la raíz del proyecto tomando como referencia `.env.example`.
 
 ## Scripts disponibles
 
@@ -92,6 +129,12 @@ npm run dev
 Inicia el servidor en modo desarrollo usando `node --watch`.
 
 ```bash
+npm run db:init
+```
+
+Crea o verifica la base de datos, ejecuta migraciones y carga seeders.
+
+```bash
 npm run db:migrate
 ```
 
@@ -104,16 +147,11 @@ npm run db:seed
 Ejecuta los seeders pendientes.
 
 ```bash
-npm run db:init
-```
-
-Ejecuta migraciones y seeders.
-
-```bash
 npm run db:reset
 ```
 
 Elimina las migraciones aplicadas, vuelve a migrar y vuelve a cargar los datos demo.
+Este comando se recomienda solo para desarrollo.
 
 ## Usuarios de prueba
 
@@ -292,6 +330,9 @@ public/
   img/
   js/
   uploads/
+
+docs/
+  uml/
 ```
 
 ## Base de datos
@@ -320,6 +361,18 @@ La estructura incluye tablas para:
 
 Las tablas utilizan claves primarias, claves foráneas, índices, restricciones de unicidad e integridad referencial.
 
+## Diagrama UML / DER de la base de datos
+
+El siguiente diagrama representa las principales tablas de la base de datos MySQL, sus claves primarias, claves foráneas y relaciones.
+
+![Diagrama UML de la base de datos Fotaza 2](docs/uml/uml-fotaza-2.png)
+
+El archivo fuente del diagrama se encuentra en:
+
+```text
+docs/uml/uml-fotaza-2.puml
+```
+
 ## Datos demo
 
 El proyecto incluye seeders con datos de prueba:
@@ -339,6 +392,52 @@ Las imágenes demo se encuentran en:
 ```text
 public/img/
 ```
+
+## Despliegue en Railway
+
+El proyecto también fue probado en Railway utilizando:
+
+* Servicio Web para la aplicación Node.js.
+* Servicio MySQL para la base de datos.
+* Variables de entorno configuradas desde el panel de Railway.
+
+En producción, las variables utilizadas por Railway son equivalentes a:
+
+```env
+NODE_ENV=production
+
+DB_HOST=<HOST_DE_MYSQL_EN_RAILWAY>
+DB_PORT=<PUERTO_DE_MYSQL_EN_RAILWAY>
+DB_NAME=<NOMBRE_DE_BASE_EN_RAILWAY>
+DB_USER=<USUARIO_DE_MYSQL_EN_RAILWAY>
+DB_PASSWORD=<PASSWORD_DE_MYSQL_EN_RAILWAY>
+
+JWT_SECRET=<CLAVE_SECRETA_SEGURA>
+```
+
+También se soportan las variables generadas por Railway para MySQL:
+
+```env
+MYSQLHOST=
+MYSQLPORT=
+MYSQLUSER=
+MYSQLPASSWORD=
+MYSQLDATABASE=
+```
+
+La configuración del proyecto permite usar tanto variables `DB_*` como variables `MYSQL*`.
+
+## Consideraciones importantes
+
+* No se debe subir el archivo `.env` al repositorio.
+* No se debe subir la carpeta `node_modules`.
+* No se deben subir imágenes cargadas por usuarios dentro de `public/uploads`.
+* El archivo `public/uploads/.gitkeep` sí se incluye para conservar la carpeta.
+* Las imágenes subidas por usuarios se guardan localmente en `public/uploads`.
+* En entornos cloud, como Railway, las imágenes subidas localmente pueden no persistir luego de redeploys si no se configura almacenamiento persistente.
+* Las imágenes demo se usan solo para facilitar la corrección del proyecto.
+* El proyecto usa renderizado del lado servidor con PUG.
+* No utiliza React, Vue, Angular, Next, Nuxt ni Gatsby.
 
 ## Problemas encontrados y soluciones aplicadas
 
@@ -378,8 +477,18 @@ Solución aplicada:
 * Filtrar denuncias por `status = 'pending'` al cargar publicaciones.
 * Permitir reactivar denuncias desestimadas si el usuario vuelve a denunciar.
 
+### Conexión a MySQL en Railway
+
+Durante el despliegue, la aplicación necesitó utilizar las variables internas de Railway para conectarse al servicio MySQL.
+
+Solución aplicada:
+
+* Adaptar la configuración para leer variables `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD` y `MYSQLDATABASE`.
+* Mantener compatibilidad con variables locales `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` y `DB_NAME`.
+
 ## Autor
 
 Jonathan Muñoz
 
 Trabajo Final Integrador - Programación Web II
+
