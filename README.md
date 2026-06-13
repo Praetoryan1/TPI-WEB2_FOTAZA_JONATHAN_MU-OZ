@@ -486,6 +486,8 @@ Solución aplicada:
 * Adaptar la configuración para leer variables `MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD` y `MYSQLDATABASE`.
 * Mantener compatibilidad con variables locales `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` y `DB_NAME`.
 
+IMPORTANTE = En Railway, las imágenes subidas por usuarios se guardan localmente en public/uploads. Al no tener configurado un volumen persistente ni Cloudinary, esas imágenes pueden perderse si el servicio se reinicia o se redeploya. Las imágenes demo incluidas en public/img sí permanecen porque forman parte del repositorio. Se utilizará Cloudinary en el futuro para hacerlo más profesional :).
+
 ## Autor
 
 Jonathan Muñoz
